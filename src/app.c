@@ -148,8 +148,7 @@ app_context_init(AppContext * const context)
 {
     memset(context, 0, sizeof *context);
     context->logfile_fp = NULL;
-    context->logfile_last_rotation =
-        context->logfile_rotate_after = (time_t) -1;
+    context->logfile_last_rotation = (time_t) -1;
 
     return 0;
 }

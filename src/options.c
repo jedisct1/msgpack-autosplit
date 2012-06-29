@@ -43,7 +43,8 @@ static int
 options_init_with_default(AppContext * const context)
 {
     context->log_dir = NULL;
-    context->logfile_soft_limit = (size_t) 100U;
+    context->logfile_soft_limit = (size_t) LOGFILE_SOFT_LIMIT_DEFAULT;
+    context->logfile_rotate_after = (time_t) -1;
     context->logfile_seq = 0U;
     
     return 0;
