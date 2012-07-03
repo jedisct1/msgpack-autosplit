@@ -91,14 +91,14 @@ static int
 app_process_stream(AppContext * const context)
 {
     char             input[INPUT_BUFFER_SIZE];
-    msgpack_unpacker mpac;
+    msgpack_sbuffer  sbuf;
     msgpack_unpacked pac;
     ssize_t          nbread;
+    size_t           offset;
+    size_t           poffset = (size_t) 0U;
     _Bool            force_rotate = 0;
 
-    if (msgpack_unpacker_init(&mpac, MSGPACK_UNPACKER_INIT_BUFFER_SIZE) == 0) {
-        errx(1, _("Unable to initialize a MessagePack unpacker"));
-    }
+    msgpack_sbuffer_init(&sbuf);
     msgpack_unpacked_init(&pac);
     for (;;) {
         switch (app_poll_stream(context)) {
@@ -116,29 +116,39 @@ app_process_stream(AppContext * const context)
         if (nbread == 0) {
             break;
         }
-        msgpack_unpacker_reserve_buffer(&mpac, (size_t) nbread);
-        memcpy(msgpack_unpacker_buffer(&mpac), input, (size_t) nbread);
-        msgpack_unpacker_buffer_consumed(&mpac, (size_t) nbread);
-        if (msgpack_unpacker_next(&mpac, &pac) == 0) {
-            continue;
+        if (msgpack_sbuffer_write(&sbuf, input, nbread) != 0) {
+            warn(_("Unable to expand a sbuffer"));
+            return -1;
         }
-        if (fwrite(mpac.buffer, mpac.off,
-                   (size_t) 1U, context->logfile_fp) != (size_t) 1U) {
-            warnx(_("Error when writing a record"));
-            force_rotate = 1;
+        while (sbuf.size > poffset) {
+            offset = (size_t) 0U;
+            if (msgpack_unpack_next(&pac, sbuf.data + poffset,
+                                    sbuf.size - poffset, &offset) == 0) {
+                break;
+            }
+            if (fwrite(sbuf.data + poffset, offset,
+                       (size_t) 1U, context->logfile_fp) != (size_t) 1U) {
+                warnx(_("Error when writing a record"));
+                force_rotate = 1;
+            }
+            poffset += offset;
         }
-        msgpack_zone_free(msgpack_unpacked_release_zone(&pac));
-        memmove(mpac.buffer, mpac.buffer + mpac.off, mpac.used - mpac.off);
-        mpac.used -= mpac.off;
-        mpac.off = 0;
-        mpac.free += mpac.off;
+        if (poffset >= sbuf.size) {
+            msgpack_sbuffer_clear(&sbuf);
+        } else {
+            assert(sbuf.size > poffset);
+            memmove(sbuf.data, sbuf.data + poffset, sbuf.size - poffset);
+            sbuf.size -= poffset;
+        }
+        poffset = (size_t) 0U;
         if (force_rotate != 0) {
             log_rotate(context);
         } else {
             log_rotate_if_needed(context);
         }
     }
-    msgpack_unpacker_destroy(&mpac);
+    msgpack_unpacked_destroy(&pac);
+    msgpack_sbuffer_destroy(&sbuf);
 
     return 0;
 }
