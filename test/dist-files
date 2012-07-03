@@ -1,0 +1,9 @@
+./dist-dirs
+./dist-files
+./features/help.feature
+./features/one_file.feature
+./features/step_definitions/files_number.rb
+./features/step_definitions/msgpack.rb
+./features/support/env.rb
+./Makefile.in
+./Rakefile
