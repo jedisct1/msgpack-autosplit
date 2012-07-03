@@ -13,11 +13,11 @@ static struct option getopt_long_options[] = {
     { "help", 0, NULL, 'h' },
     { "soft-limit", 1, NULL, 's' },
     { "rotate-after", 1, NULL, 't' },
-    { "version", 1, NULL, 'V' },
+    { "version", 0, NULL, 'V' },
     { NULL, 0, NULL, 0 }
 };
 
-static const char *getopt_options = "d:hs:V:";
+static const char *getopt_options = "d:hs:V";
 
 static void
 options_version(void)
