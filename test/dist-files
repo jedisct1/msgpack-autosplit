@@ -6,5 +6,8 @@
 ./features/step_definitions/files_number.rb
 ./features/step_definitions/msgpack.rb
 ./features/support/env.rb
+./Gemfile
+./Gemfile.lock
+./Makefile
 ./Makefile.in
 ./Rakefile
