@@ -11,4 +11,5 @@ EXTRA_DIST = \
 
 SUBDIRS = \
 	po \
-	src
+	src \
+	test

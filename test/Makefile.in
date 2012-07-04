@@ -4,8 +4,10 @@ all:
 test:
 	rake cucumber
 
-clean:
-distclean:
+check: test
+
+installcheck: check
+
 install:
 install-data:
 install-exec:
@@ -16,8 +18,11 @@ install-info:
 install-ps:
 install-pdf:
 installdirs:
-check:
-installcheck:
+
+clean:
+	-$(RM) -r tmp
+
+distclean: clean
 mostlyclean: clean
 maintainer-clean: distclean
 
