@@ -1,6 +1,7 @@
 ./dist-dirs
 ./dist-files
 ./features/help.feature
+./features/multiple_files.feature
 ./features/one_file.feature
 ./features/step_definitions/files_number.rb
 ./features/step_definitions/msgpack.rb
