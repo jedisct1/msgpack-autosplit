@@ -1,6 +1,9 @@
 
 #include <config.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include <assert.h>
 #include <err.h>
 #include <errno.h>
@@ -42,6 +45,7 @@ int
 log_rotate(AppContext * const context)
 {
     char timestamped_logfile_name[LOG_TIMESTAMPED_LOGFILE_MAX_LENGTH];
+    struct stat      st;
 
     if (context->logfile_fp != NULL) {
         if (fclose(context->logfile_fp) != 0) {
@@ -61,10 +65,16 @@ log_rotate(AppContext * const context)
         }
         context->logfile_seq++;
     } while (access(timestamped_logfile_name, F_OK) == 0);
-    if (rename(LOG_LOGFILE_NAME_CURRENT, timestamped_logfile_name) != 0 &&
-        errno != ENOENT) {
-        warn(_("Unable to rename [%s] to [%s]"),
-             LOG_LOGFILE_NAME_CURRENT, timestamped_logfile_name);
+    if (stat(LOG_LOGFILE_NAME_CURRENT, &st) != 0) {
+        if (errno != ENOENT) {
+            warn(_("Unable to stat [%s]"), LOG_LOGFILE_NAME_CURRENT);
+        }
+    } else if (st.st_size > (off_t) 0) {
+        if (rename(LOG_LOGFILE_NAME_CURRENT, timestamped_logfile_name) != 0 &&
+            errno != ENOENT) {
+            warn(_("Unable to rename [%s] to [%s]"),
+                 LOG_LOGFILE_NAME_CURRENT, timestamped_logfile_name);
+        }
     }
     context->logfile_fp = fopen(LOG_LOGFILE_NAME_CURRENT, "a+");
     if (context->logfile_fp == NULL) {
