@@ -10,7 +10,12 @@ end
 
 Then /^every file for "(.*?)" should be a valid msgpack stream$/ do |glob|
   Dir[glob].each do |filename|
-    MessagePack::unpack(File.read(filename))
+    File.open(filename) do |f|
+      begin
+        MessagePack::Unpacker.new(f).each { |object| }
+      rescue EOFError
+      end
+    end
   end
 end
 
