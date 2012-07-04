@@ -177,6 +177,7 @@ main(int argc, char *argv[])
     assert(context.logfile_fp != NULL);
     app_process_stream(&context);
     log_rotate(&context);
+    log_close(&context);
 
     return 0;
 }

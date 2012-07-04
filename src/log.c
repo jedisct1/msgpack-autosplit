@@ -42,16 +42,25 @@ log_get_timestamped_logfile_name(AppContext * const context,
 }
 
 int
-log_rotate(AppContext * const context)
+log_close(AppContext * const context)
 {
-    char timestamped_logfile_name[LOG_TIMESTAMPED_LOGFILE_MAX_LENGTH];
-    struct stat      st;
-
     if (context->logfile_fp != NULL) {
         if (fclose(context->logfile_fp) != 0) {
             return -1;
         }
         context->logfile_fp = NULL;
+    }
+    return 0;
+}
+
+int
+log_rotate(AppContext * const context)
+{
+    char        timestamped_logfile_name[LOG_TIMESTAMPED_LOGFILE_MAX_LENGTH];
+    struct stat st;
+
+    if (log_close(context) != 0) {
+        return -1;
     }
     context->logfile_seq = 0U;
     do {
