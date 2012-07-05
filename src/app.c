@@ -68,7 +68,7 @@ app_chdir_to_log_dir(const AppContext * const context)
 static int
 app_poll_stream(AppContext * const context)
 {
-    struct pollfd    poll_fd = { .fd = STDIN_FILENO, .events = POLLIN };    
+    struct pollfd    poll_fd = { .fd = STDIN_FILENO, .events = POLLIN };
     time_t           delay_before_next;
     int              poll_timeout;
     int              poll_ret;
@@ -126,8 +126,8 @@ app_process_stream(AppContext * const context)
                                     sbuf.size - poffset, &offset) == 0) {
                 break;
             }
-            if (fwrite(sbuf.data + poffset, offset,
-                       (size_t) 1U, context->logfile_fp) != (size_t) 1U) {
+            if (log_write(context, sbuf.data + poffset,
+                          offset) != (size_t) 1U) {
                 warnx(_("Error when writing a record"));
                 force_rotate = 1;
             }
@@ -157,7 +157,6 @@ static int
 app_context_init(AppContext * const context)
 {
     memset(context, 0, sizeof *context);
-    context->logfile_fp = NULL;
     context->logfile_last_rotation = (time_t) -1;
 
     return 0;
@@ -173,10 +172,14 @@ main(int argc, char *argv[])
     app_context_init(&context);
     options_parse(&context, argc, argv);
     app_chdir_to_log_dir(&context);
-    log_rotate(&context);
-    assert(context.logfile_fp != NULL);
+    if (log_rotate(&context) != 0) {
+        err(1, "log_rotate");
+    }
+    assert(context.logfile_enabled != 0);
     app_process_stream(&context);
-    log_rotate(&context);
+    if (log_rotate(&context) != 0) {
+        warn(1, "log_rotate");
+    }
     log_close(&context);
 
     return 0;

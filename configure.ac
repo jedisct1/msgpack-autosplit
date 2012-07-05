@@ -116,6 +116,7 @@ AC_CHECK_HEADER([CoreServices/CoreServices.h],
 AC_HEADER_ASSERT
 
 AC_CHECK_LIB([msgpack], [msgpack_version])
+AC_CHECK_LIB([z], [gzopen])
 
 AC_ARG_ENABLE(debug,
 [AS_HELP_STRING(--enable-debug,For maintainers only - please do not use)],

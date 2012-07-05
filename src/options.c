@@ -4,6 +4,7 @@
 #include <err.h>
 #include <getopt.h>
 #include <stdlib.h>
+#include <strings.h>
 
 #include "gettext.h"
 #include "options.h"
@@ -13,11 +14,12 @@ static struct option getopt_long_options[] = {
     { "help", 0, NULL, 'h' },
     { "soft-limit", 1, NULL, 's' },
     { "rotate-after", 1, NULL, 't' },
+    { "compress", 1, NULL, 'z' },
     { "version", 0, NULL, 'V' },
     { NULL, 0, NULL, 0 }
 };
 
-static const char *getopt_options = "d:hs:V";
+static const char *getopt_options = "d:hs:z:V";
 
 static void
 options_version(void)
@@ -42,11 +44,12 @@ options_usage(void)
 static int
 options_init_with_default(AppContext * const context)
 {
+    context->log_compression = LOG_COMPRESSION_NONE;
     context->log_dir = NULL;
     context->logfile_soft_limit = (size_t) LOGFILE_SOFT_LIMIT_DEFAULT;
     context->logfile_rotate_after = (time_t) -1;
     context->logfile_seq = 0U;
-    
+
     return 0;
 }
 
@@ -81,6 +84,13 @@ options_parse(AppContext * const context, int argc, char *argv[])
             break;
         case 's':
             context->logfile_soft_limit = (size_t) strtoul(optarg, NULL, 10);
+            break;
+        case 'z':
+            if (strcasecmp(optarg, "gzip") == 0) {
+                context->log_compression = LOG_COMPRESSION_GZIP;
+            } else {
+                errx(1, _("Unsupported compression method: [%s]"), optarg);
+            }
             break;
         case 'V':
             options_version();
