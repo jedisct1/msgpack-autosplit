@@ -74,8 +74,6 @@ log_close_any(AppContext * const context)
         context->logfile_fd.gzfp = NULL;
         break;
     }
-    context->logfile_enabled = 0;
-
     return 0;
 }
 
@@ -162,7 +160,7 @@ log_close(AppContext * const context)
         if (log_close_any(context) != 0) {
             return -1;
         }
-        assert(context->logfile_enabled == 0);
+        context->logfile_enabled = 0;
     }
     return 0;
 }
