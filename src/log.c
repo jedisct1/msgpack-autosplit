@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
+#include <strings.h>
 #include <unistd.h>
 
 #include "gettext.h"
@@ -16,6 +17,16 @@
 
 #define LOG_LOGFILE_NAME_CURRENT_BASE ".current"
 #define LOG_TIMESTAMPED_LOGFILE_MAX_LENGTH 100U
+
+int
+log_set_compression(AppContext * const context, const char * const name)
+{
+    if (strcasecmp(name, "gzip") == 0) {
+        context->log_compression = LOG_COMPRESSION_GZIP;
+        return 0;
+    }
+    return -1;
+}
 
 static const char *
 log_get_current_logfile_name(AppContext * const context)

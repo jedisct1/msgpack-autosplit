@@ -4,7 +4,6 @@
 #include <err.h>
 #include <getopt.h>
 #include <stdlib.h>
-#include <strings.h>
 
 #include "gettext.h"
 #include "options.h"
@@ -90,9 +89,7 @@ options_parse(AppContext * const context, int argc, char *argv[])
             context->logfile_soft_limit = (size_t) strtoul(optarg, NULL, 10);
             break;
         case 'z':
-            if (strcasecmp(optarg, "gzip") == 0) {
-                context->log_compression = LOG_COMPRESSION_GZIP;
-            } else {
+            if (log_set_compression(context, optarg) != 0) {
                 errx(1, _("Unsupported compression method: [%s]"), optarg);
             }
             break;
