@@ -10,6 +10,7 @@ EXTRA_DIST = \
 	config.rpath
 
 SUBDIRS = \
+	man \
 	po \
 	src \
 	test

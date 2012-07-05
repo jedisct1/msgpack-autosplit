@@ -152,5 +152,5 @@ AC_ARG_WITH(safecode,
 
 AC_SUBST([MAINT])
 
-AC_CONFIG_FILES([Makefile src/Makefile po/Makefile.in test/Makefile])
+AC_CONFIG_FILES([Makefile man/Makefile po/Makefile.in src/Makefile test/Makefile])
 AC_OUTPUT

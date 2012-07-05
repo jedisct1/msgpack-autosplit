@@ -1,0 +1,58 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "MSGPACK\-AUTOSPLIT" "8" "July 2012" "" ""
+.
+.SH "NAME"
+\fBmsgpack\-autosplit\fR \- A tool to safely rotate msgpack log files
+.
+.SH "SYNOPSIS"
+\fBmsgpack\-autosplit\fR \fB\-\-dir=<directory>\fR [\fIoptions\fR]
+.
+.SH "DESCRIPTION"
+Since records in a MessagePack stream are not delimited by carriage returns, tools like Logrotate can hardly safely rotate this kind of log file without breaking arbitrary records\.
+.
+.P
+msgpack\-autosplit reads a MessagePack stream on the standard input, writes this stream to disk, and automatically, and safely perform logfile rotation after a file reaches a maximum size, or after a maximum delay\.
+.
+.P
+You\'d rather use Fluent\. Fluent is awesome\. But, well, sometimes, Fluent not an option\.
+.
+.SH "OPTIONS"
+.
+.IP "\(bu" 4
+\fB\-d\fR, \fB\-\-dir=<directory>\fR: set the target directory, where logs are going to be written\.
+.
+.IP "\(bu" 4
+\fB\-h\fR, \fB\-\-help\fR: show usage\.
+.
+.IP "\(bu" 4
+\fB\-s\fR, \fB\-\-soft\-limit=<bytes>\fR: set the limit after which a log rotation will occur\.
+.
+.IP "\(bu" 4
+\fB\-t\fR, \fB\-\-rotate\-after=<seconds>\fR: trigger a rotation after this many seconds\.
+.
+.IP "\(bu" 4
+\fB\-z\fR, \fB\-\-compress=<compressor>\fR: compress data using \fBcompressor\fR\. Only \fBgzip\fR is currently implemented\.
+.
+.IP "\(bu" 4
+\fB\-V\fR, \fB\-\-version\fR: display software version\.
+.
+.IP "" 0
+.
+.SH "SIMPLE USAGE EXAMPLE"
+.
+.nf
+
+$ msgpack\-autosplit \-d /var/log/queries
+.
+.fi
+.
+.SH "ADVANCED USAGE EXAMPLE"
+.
+.nf
+
+$ msgpack\-autosplit \-d /var/log/queries \-s 1000000 \-t 86400 \-z gzip
+.
+.fi
+

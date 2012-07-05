@@ -36,7 +36,6 @@ Finally, compile and install it using the standard procedure:
 Usage
 -----
 
-    $ msgpack-autosplit --help
+    $ man 8 msgpack-autosplit
     
 should be enough to get you started.
-
