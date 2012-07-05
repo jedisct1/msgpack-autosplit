@@ -92,6 +92,9 @@ AX_CHECK_LINK_FLAG([-Wl,-z,relro], [LDFLAGS="$LDFLAGS -Wl,-z,relro"])
 AX_CHECK_LINK_FLAG([-Wl,-z,now], [LDFLAGS="$LDFLAGS -Wl,-z,now"])
 AX_CHECK_LINK_FLAG([-Wl,-z,noexecstack], [LDFLAGS="$LDFLAGS -Wl,-z,noexecstack"])
 
+AC_ARG_VAR([RONN], [path to the ronn text processor])
+AC_PATH_PROG([RONN], [ronn], [#])
+
 AS_IF([test -d /usr/local/include], [
   CPPFLAGS="$CPPFLAGS -I/usr/local/include"
 ])
