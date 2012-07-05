@@ -25,6 +25,15 @@ Feature: Show help
     When I run `msgpack-autosplit`
     Then the output should contain:
     """
+    Options:
+    """
+    And the exit status should be 1
+
+  Scenario: start without mentioning
+
+    When I run `msgpack-autosplit --compress=gzip`
+    Then the output should contain:
+    """
     Directory not specified
     """
     And the exit status should be 1

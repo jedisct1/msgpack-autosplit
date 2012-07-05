@@ -69,6 +69,10 @@ options_parse(AppContext * const context, int argc, char *argv[])
     int option_index = 0;
 
     options_init_with_default(context);
+    if (argc <= 1) {
+        options_usage();
+        exit(1);
+    }
     while ((opt_flag = getopt_long(argc, argv,
                                    getopt_options, getopt_long_options,
                                    &option_index)) != -1) {
