@@ -157,7 +157,7 @@ static int
 app_context_init(AppContext * const context)
 {
     memset(context, 0, sizeof *context);
-    context->logfile_last_rotation = (time_t) -1;
+    context->log_dir = NULL;
 
     return 0;
 }
@@ -170,6 +170,7 @@ main(int argc, char *argv[])
     app_init_locale();
     app_sandbox();
     app_context_init(&context);
+    log_init(&context);
     options_parse(&context, argc, argv);
     app_chdir_to_log_dir(&context);
     if (log_rotate(&context) != 0) {

@@ -1,6 +1,7 @@
 
 #include <config.h>
 
+#include <assert.h>
 #include <err.h>
 #include <getopt.h>
 #include <stdlib.h>
@@ -44,7 +45,7 @@ options_usage(void)
 static int
 options_init_with_default(AppContext * const context)
 {
-    context->log_compression = LOG_COMPRESSION_NONE;
+    assert(context->log_compression == LOG_COMPRESSION_NONE);
     context->log_dir = NULL;
     context->logfile_soft_limit = (size_t) LOGFILE_SOFT_LIMIT_DEFAULT;
     context->logfile_rotate_after = (time_t) -1;

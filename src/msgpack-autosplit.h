@@ -21,14 +21,15 @@ typedef union LogfileFD_ {
 } LogfileFD;
 
 typedef struct AppContext_ {
-    const char    *log_dir;
-    LogfileFD      logfile_fd;
-    size_t         logfile_soft_limit;
-    time_t         logfile_last_rotation;
-    time_t         logfile_rotate_after;
-    unsigned int   logfile_seq;
-    LogCompression log_compression;
-    _Bool          logfile_enabled;
+    struct LogfileOps_ *logfile_ops;
+    const char         *log_dir;
+    LogfileFD           logfile_fd;
+    size_t              logfile_soft_limit;
+    time_t              logfile_last_rotation;
+    time_t              logfile_rotate_after;
+    unsigned int        logfile_seq;
+    LogCompression      log_compression;
+    _Bool               logfile_enabled;
 } AppContext;
 
 #endif

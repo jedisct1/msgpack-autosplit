@@ -12,6 +12,18 @@
 
 #include "msgpack-autosplit.h"
 
+typedef struct LogfileOps_ {
+    const char *(*logfile_extension)(void);
+    const char *(*logfile_current_file_name)(void);
+    int         (*logfile_open)(AppContext * const context,
+                                const char * const file_name);
+    int         (*logfile_close)(AppContext * const context);
+    off_t       (*logfile_ftello)(AppContext * const context);
+    ssize_t     (*logfile_write)(AppContext * const context,
+                                 const void * const data, const size_t size);
+} LogfileOps;
+
+int log_init(AppContext * const context);
 int log_set_compression(AppContext * const context, const char * const name);
 int log_close(AppContext * const context);
 int log_rotate(AppContext * const context);
