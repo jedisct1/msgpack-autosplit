@@ -24,11 +24,13 @@ logfile_extension_none(void)
     return "";
 }
 
+#ifdef HAVE_LIBZ
 static const char *
 logfile_extension_gzip(void)
 {
     return ".gz";
 }
+#endif
 
 static const char *
 logfile_current_file_name_none(void)
@@ -36,11 +38,13 @@ logfile_current_file_name_none(void)
     return LOG_LOGFILE_NAME_CURRENT_BASE;
 }
 
+#ifdef HAVE_LIBZ
 static const char *
 logfile_current_file_name_gzip(void)
 {
     return LOG_LOGFILE_NAME_CURRENT_BASE ".gz";
 }
+#endif
 
 static int
 logfile_open_none(AppContext * const context, const char * const file_name)
@@ -55,6 +59,7 @@ logfile_open_none(AppContext * const context, const char * const file_name)
     return 0;
 }
 
+#ifdef HAVE_LIBZ
 static int
 logfile_open_gzip(AppContext * const context, const char * const file_name)
 {
@@ -67,6 +72,7 @@ logfile_open_gzip(AppContext * const context, const char * const file_name)
 
     return 0;
 }
+#endif
 
 static int
 logfile_close_none(AppContext * const context)
@@ -81,6 +87,7 @@ logfile_close_none(AppContext * const context)
     return 0;
 }
 
+#ifdef HAVE_LIBZ
 static int
 logfile_close_gzip(AppContext * const context)
 {
@@ -93,6 +100,7 @@ logfile_close_gzip(AppContext * const context)
 
     return 0;
 }
+#endif
 
 static off_t
 logfile_ftello_none(AppContext * const context)
@@ -102,6 +110,7 @@ logfile_ftello_none(AppContext * const context)
     return ftello(context->logfile_fd.fp);
 }
 
+#ifdef HAVE_LIBZ
 static off_t
 logfile_ftello_gzip(AppContext * const context)
 {
@@ -109,6 +118,7 @@ logfile_ftello_gzip(AppContext * const context)
     assert(context->logfile_fd.gzfp != NULL);
     return (off_t) gztell(context->logfile_fd.gzfp);
 }
+#endif
 
 static ssize_t
 logfile_write_none(AppContext * const context, const void * const data,
@@ -119,6 +129,7 @@ logfile_write_none(AppContext * const context, const void * const data,
     return (ssize_t) fwrite(data, (size_t) 1U, size, context->logfile_fd.fp);
 }
 
+#ifdef HAVE_LIBZ
 static ssize_t
 logfile_write_gzip(AppContext * const context, const void * const data,
                    const size_t size)
@@ -132,6 +143,7 @@ logfile_write_gzip(AppContext * const context, const void * const data,
     return (ssize_t) gzwrite(context->logfile_fd.gzfp, data,
                              (unsigned int) size);
 }
+#endif
 
 static LogfileOps logfile_ops_none = {
     .logfile_extension = logfile_extension_none,
@@ -142,6 +154,7 @@ static LogfileOps logfile_ops_none = {
     .logfile_write     = logfile_write_none
 };
 
+#ifdef HAVE_LIBZ
 static LogfileOps logfile_ops_gzip = {
     .logfile_extension = logfile_extension_gzip,
     .logfile_current_file_name = logfile_current_file_name_gzip,
@@ -150,14 +163,17 @@ static LogfileOps logfile_ops_gzip = {
     .logfile_ftello    = logfile_ftello_gzip,
     .logfile_write     = logfile_write_gzip
 };
+#endif
 
 int
 log_set_compression(AppContext * const context, const char * const name)
 {
     if (strcasecmp(name, "gzip") == 0) {
+#ifdef HAVE_LIBZ
         context->log_compression = LOG_COMPRESSION_GZIP;
         context->logfile_ops = &logfile_ops_gzip;
         return 0;
+#endif
     } else if (strcasecmp(name, "none") == 0) {
         assert(context->log_compression == LOG_COMPRESSION_NONE);
         assert(context->logfile_ops == &logfile_ops_none);
