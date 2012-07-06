@@ -131,7 +131,7 @@ app_process_stream(AppContext * const context)
                 break;
             }
             if (log_write(context, sbuf.data + poffset,
-                          offset) != (size_t) 1U) {
+                          offset) != (ssize_t) offset) {
                 warnx(_("Error when writing a record"));
                 force_rotate = 1;
             }
