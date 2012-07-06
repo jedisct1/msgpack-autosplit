@@ -21,14 +21,13 @@ But, well, sometimes, Fluent not an option.
 Installation
 ------------
 
-If you grabbed a copy of the git repository instead of a release, run:
+Download a [msgpack-autosplit tarball](https://github.com/jedisct1/msgpack-autosplit/downloads)
+from Github.
 
-    $ ./autogen.sh
-    
-You need autoconf, automake, libtool and gettext in order for that
-command to possibly work.
+Make sure that you have the MessagePack and Zlib libraries installed,
+with their development headers.
 
-Finally, compile and install it using the standard procedure:
+Compile and install `msgpack-autosplit` using the standard procedure:
 
     $ ./configure
     # make install
