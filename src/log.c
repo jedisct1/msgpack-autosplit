@@ -81,7 +81,7 @@ logfile_ftello(AppContext * const context)
     return (ssize_t) -1;
 }
 
-ssize_t
+static ssize_t
 logfile_write(AppContext * const context, const void * const data,
               const size_t size)
 {
