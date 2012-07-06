@@ -12,5 +12,5 @@ Feature: Create a gzipped log file
     Then a directory named "logdir-gzip" should exist
     And a file named "logdir-gzip/.current.gz" should exist
     And the number of files for "tmp/aruba/logdir-gzip/*.gz" should be 0.
-    And the number of files for "tmp/aruba/logdir-gzip/*" should be 2.
+    And the number of files for "tmp/aruba/logdir-gzip/*" should be 1.
     And every file for "tmp/aruba/logdir-gzip/*" should be a valid msgpack stream
