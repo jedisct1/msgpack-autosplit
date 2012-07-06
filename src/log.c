@@ -18,32 +18,8 @@
 #define LOG_LOGFILE_NAME_CURRENT_BASE ".current"
 #define LOG_TIMESTAMPED_LOGFILE_MAX_LENGTH 100U
 
-int
-log_set_compression(AppContext * const context, const char * const name)
-{
-    if (strcasecmp(name, "gzip") == 0) {
-        context->log_compression = LOG_COMPRESSION_GZIP;
-        return 0;
-    }
-    return -1;
-}
-
-static const char *
-log_get_current_logfile_name(AppContext * const context)
-{
-    switch (context->log_compression) {
-    case LOG_COMPRESSION_NONE:
-        return LOG_LOGFILE_NAME_CURRENT_BASE;
-    case LOG_COMPRESSION_GZIP:
-        return LOG_LOGFILE_NAME_CURRENT_BASE ".gz";
-    }
-    errno = EINVAL;
-
-    return NULL;
-}
-
 static int
-log_open_any(AppContext * const context, const char * const file_name)
+logfile_open(AppContext * const context, const char * const file_name)
 {
     assert(context->logfile_enabled == 0);
     switch (context->log_compression) {
@@ -66,7 +42,7 @@ log_open_any(AppContext * const context, const char * const file_name)
 }
 
 static int
-log_close_any(AppContext * const context)
+logfile_close(AppContext * const context)
 {
     assert(context->logfile_enabled != 0);
     switch (context->log_compression) {
@@ -89,7 +65,7 @@ log_close_any(AppContext * const context)
 }
 
 static off_t
-log_ftello_any(AppContext * const context)
+logfile_ftello(AppContext * const context)
 {
     assert(context->logfile_enabled != 0);
     switch (context->log_compression) {
@@ -103,6 +79,30 @@ log_ftello_any(AppContext * const context)
     }
     errno = EINVAL;
     return (ssize_t) -1;
+}
+
+int
+log_set_compression(AppContext * const context, const char * const name)
+{
+    if (strcasecmp(name, "gzip") == 0) {
+        context->log_compression = LOG_COMPRESSION_GZIP;
+        return 0;
+    }
+    return -1;
+}
+
+static const char *
+log_get_current_logfile_name(AppContext * const context)
+{
+    switch (context->log_compression) {
+    case LOG_COMPRESSION_NONE:
+        return LOG_LOGFILE_NAME_CURRENT_BASE;
+    case LOG_COMPRESSION_GZIP:
+        return LOG_LOGFILE_NAME_CURRENT_BASE ".gz";
+    }
+    errno = EINVAL;
+
+    return NULL;
 }
 
 static int
@@ -168,7 +168,7 @@ int
 log_close(AppContext * const context)
 {
     if (context->logfile_enabled != 0) {
-        if (log_close_any(context) != 0) {
+        if (logfile_close(context) != 0) {
             return -1;
         }
         context->logfile_enabled = 0;
@@ -212,7 +212,7 @@ log_rotate(AppContext * const context)
         }
     }
     assert(context->logfile_enabled == 0);
-    if (log_open_any(context, current_file_name) != 0) {
+    if (logfile_open(context, current_file_name) != 0) {
         err(1, _("Unable to create [%s]"), current_file_name);
     }
     assert(context->logfile_enabled = 1);
@@ -247,7 +247,7 @@ int
 log_rotate_if_needed(AppContext * const context)
 {
     if (log_get_delay_before_next(context) == (time_t) 0 ||
-        log_ftello_any(context) >= (off_t) context->logfile_soft_limit) {
+        logfile_ftello(context) >= (off_t) context->logfile_soft_limit) {
         return log_rotate(context);
     }
     return 0;

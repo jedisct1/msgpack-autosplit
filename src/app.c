@@ -178,7 +178,7 @@ main(int argc, char *argv[])
     assert(context.logfile_enabled != 0);
     app_process_stream(&context);
     if (log_rotate(&context) != 0) {
-        warn(1, "log_rotate");
+        warn("log_rotate");
     }
     log_close(&context);
 
