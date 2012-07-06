@@ -3,7 +3,7 @@ AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
 AM_CFLAGS = @CWFLAGS@
 LDADD = @LIBINTL@
 
-sbin_PROGRAMS = \
+bin_PROGRAMS = \
 	msgpack-autosplit
 
 msgpack_autosplit_SOURCES = \
