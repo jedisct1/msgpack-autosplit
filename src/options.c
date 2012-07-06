@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #include "gettext.h"
+#include "log.h"
 #include "options.h"
 
 static struct option getopt_long_options[] = {
