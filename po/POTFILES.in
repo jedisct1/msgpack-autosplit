@@ -1,0 +1,9 @@
+src/app.c
+src/gettext.h
+src/log.c
+src/log.h
+src/msgpack-autosplit.h
+src/options.c
+src/options.h
+src/safe_rw.c
+src/safe_rw.h

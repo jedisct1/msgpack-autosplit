@@ -31,7 +31,6 @@ man/Makefile.in
 missing
 po/Makefile.in.in
 po/Makevars.template
-po/POTFILES.in
 po/Rules-quot
 po/boldquot.sed
 po/en@boldquot.header
