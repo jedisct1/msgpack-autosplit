@@ -9,5 +9,5 @@ Feature: Create multiple log files
     When I run `sh -c 'msgpack-autosplit -s 1000 -d logdir-large < msgpack-large.data'`
     Then a directory named "logdir-large" should exist
     And a file named "logdir-large/.current" should exist
-    And the number of files for "tmp/aruba/logdir-large/*" should be 5.
+    And the number of files for "tmp/aruba/logdir-large/*" should be 500.
     And every file for "tmp/aruba/logdir-large/*" should be a valid msgpack stream

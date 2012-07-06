@@ -100,7 +100,6 @@ app_process_stream(AppContext * const context)
     ssize_t          nbread;
     size_t           offset;
     size_t           poffset = (size_t) 0U;
-    _Bool            force_rotate = 0;
 
     msgpack_sbuffer_init(&sbuf);
     msgpack_unpacked_init(&pac);
@@ -133,7 +132,9 @@ app_process_stream(AppContext * const context)
             if (log_write(context, sbuf.data + poffset,
                           offset) != (ssize_t) offset) {
                 warn(_("Error when writing a record"));
-                force_rotate = 1;
+                log_rotate(context);
+            } else {
+                log_rotate_if_needed(context);
             }
             poffset += offset;
         }
@@ -145,11 +146,6 @@ app_process_stream(AppContext * const context)
             sbuf.size -= poffset;
         }
         poffset = (size_t) 0U;
-        if (force_rotate != 0) {
-            log_rotate(context);
-        } else {
-            log_rotate_if_needed(context);
-        }
     }
     msgpack_unpacked_destroy(&pac);
     msgpack_sbuffer_destroy(&sbuf);

@@ -13,5 +13,5 @@ Feature: Create multiple gzipped log files
     Then a directory named "logdir-large-gzip" should exist
     And a file named "logdir-large-gzip/.current.gz" should exist
     And the number of files for "tmp/aruba/logdir-large-gzip/*.gz" should be 0.
-    And the number of files for "tmp/aruba/logdir-large-gzip/*" should be 6.
+    And the number of files for "tmp/aruba/logdir-large-gzip/*" should be 501.
     And every file for "tmp/aruba/logdir-large-gzip/*" should be a valid msgpack stream
