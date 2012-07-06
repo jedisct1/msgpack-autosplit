@@ -62,6 +62,10 @@ app_chdir_to_log_dir(const AppContext * const context)
     if (chdir(context->log_dir) != 0) {
         err(1, _("Unable to open the directory: [%s]"), context->log_dir);
     }
+    if (geteuid() == (uid_t) 0U &&
+        (chroot(context->log_dir) != 0 || chdir("/") != 0)) {
+        err(1, _("Unable to chroot(2) to: [%s]"), context->log_dir);
+    }
     return 0;
 }
 
