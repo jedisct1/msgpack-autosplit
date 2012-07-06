@@ -81,6 +81,28 @@ logfile_ftello(AppContext * const context)
     return (ssize_t) -1;
 }
 
+ssize_t
+logfile_write(AppContext * const context, const void * const data,
+              const size_t size)
+{
+    assert(context->logfile_enabled != 0);
+    switch (context->log_compression) {
+    case LOG_COMPRESSION_NONE:
+        assert(context->logfile_fd.fp != NULL);
+        return (ssize_t) fwrite(data, (size_t) 1U, size,
+                                context->logfile_fd.fp);
+    case LOG_COMPRESSION_GZIP:
+        assert(context->logfile_fd.gzfp != NULL);
+        if (size > UINT_MAX) {
+            break;
+        }
+        return (ssize_t) gzwrite(context->logfile_fd.gzfp, data,
+                                 (unsigned int) size);
+    }
+    errno = EINVAL;
+    return (ssize_t) -1;
+}
+
 int
 log_set_compression(AppContext * const context, const char * const name)
 {
@@ -146,22 +168,7 @@ ssize_t
 log_write(AppContext * const context, const void * const data,
           const size_t size)
 {
-    assert(context->logfile_enabled != 0);
-    switch (context->log_compression) {
-    case LOG_COMPRESSION_NONE:
-        assert(context->logfile_fd.fp != NULL);
-        return (ssize_t) fwrite(data, (size_t) 1U, size,
-                                context->logfile_fd.fp);
-    case LOG_COMPRESSION_GZIP:
-        assert(context->logfile_fd.gzfp != NULL);
-        if (size > UINT_MAX) {
-            break;
-        }
-        return (ssize_t) gzwrite(context->logfile_fd.gzfp, data,
-                                 (unsigned int) size);
-    }
-    errno = EINVAL;
-    return (ssize_t) -1;
+    return logfile_write(context, data, size);
 }
 
 int
