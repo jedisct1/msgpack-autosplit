@@ -11,7 +11,7 @@ returns, tools like Logrotate can hardly safely rotate this kind of
 log file without breaking arbitrary records.
 
 msgpack-autosplit reads a MessagePack stream on the standard input,
-writes this stream to disk, and automatically, and safely perform
+writes this stream to disk, and automatically and safely performs
 logfile rotation after a file reaches a maximum size, or after a
 maximum delay.
 
