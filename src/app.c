@@ -43,7 +43,7 @@ app_init_locale(void)
 static int
 app_sandbox(void)
 {
-#ifdef HAVE_SANDBOX_LIMIT
+#ifdef HAVE_SANDBOX_INIT
     char *errmsg;
     assert(sandbox_init(kSBXProfileNoNetwork, SANDBOX_NAMED, &errmsg) == 0);
     sandbox_free_error(errmsg);
