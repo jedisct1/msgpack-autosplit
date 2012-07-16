@@ -29,7 +29,7 @@ Feature: Show help
     """
     And the exit status should be 1
 
-  Scenario: start without mentioning
+  Scenario: start without mentioning a directory
 
     When I run `msgpack-autosplit --compress=gzip`
     Then the output should contain:
