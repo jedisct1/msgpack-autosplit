@@ -1,3 +1,4 @@
+
 AC_PREREQ(2.61)
 AC_INIT(msgpack-autosplit, 0.1, http://sourceforge.net)
 AC_CONFIG_SRCDIR([src/app.c])
@@ -126,20 +127,19 @@ AC_CHECK_LIB([z], [gzopen])
 
 AC_ARG_ENABLE(debug,
 [AS_HELP_STRING(--enable-debug,For maintainers only - please do not use)],
-[ AS_IF([test "x$withval" = "xyes"], [
-    AS_IF([test "x$LX_CFLAGS" = "xNONE"], [
-      nxflags=""
-      for flag in `echo $CFLAGS`; do
-        case "$flag" in
-          -O*) ;;
-          -g*) ;;
-          *) nxflags="$nxflags $flag"
-        esac
-      done
-      CFLAGS="$nxflags -O0 -g3"
-    ])
-    AM_CFLAGS="$AM_CFLAGS -DDEBUG=1"
+[
+  AS_IF([test "x$LX_CFLAGS" = "xNONE"], [
+    nxflags=""
+    for flag in `echo $CFLAGS`; do
+      case "$flag" in
+        -O*) ;;
+        -g*) ;;
+        *) AS_VAR_APPEND([nxflags], [" $flag"]) ;;
+      esac
+    done
+    CFLAGS="$nxflags -O0 -g3"
   ])
+  AM_CFLAGS="$AM_CFLAGS -DDEBUG=1"
 ])
 
 AC_ARG_WITH(safecode,
