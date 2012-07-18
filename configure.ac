@@ -139,7 +139,7 @@ AC_ARG_ENABLE(debug,
     done
     CFLAGS="$nxflags -O0 -g3"
   ])
-  AM_CFLAGS="$AM_CFLAGS -DDEBUG=1"
+  CPPFLAGS="$CPPFLAGS -DDEBUG=1"
 ])
 
 AC_ARG_WITH(safecode,
@@ -149,7 +149,7 @@ AC_ARG_WITH(safecode,
     : ${SAFECODE_HOME:=/opt/safecode}
     LDFLAGS="$LDFLAGS -L${SAFECODE_HOME}/lib"
     LIBS="$LIBS -lsc_dbg_rt -lpoolalloc_bitmap -lstdc++"
-    AM_CFLAGS="$AM_CFLAGS -fmemsafety"
+    CFLAGS="$CFLAGS -fmemsafety"
   ])
 ])
 
