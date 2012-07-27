@@ -72,10 +72,10 @@ app_chdir_to_log_dir(const AppContext * const context)
 static int
 app_poll_stream(AppContext * const context)
 {
-    struct pollfd    poll_fd = { .fd = STDIN_FILENO, .events = POLLIN };
-    time_t           delay_before_next;
-    int              poll_timeout;
-    int              poll_ret;
+    struct pollfd poll_fd = { .fd = STDIN_FILENO, .events = POLLIN };
+    time_t        delay_before_next;
+    int           poll_timeout;
+    int           poll_ret;
 
     delay_before_next = log_get_delay_before_next(context);
     if (delay_before_next == (time_t) -1 ||
