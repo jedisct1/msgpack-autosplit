@@ -20,7 +20,7 @@ static struct option getopt_long_options[] = {
     { NULL, 0, NULL, 0 }
 };
 
-static const char *getopt_options = "d:hs:z:V";
+static const char *getopt_options = "d:hs:t:z:V";
 
 static void
 options_version(void)
