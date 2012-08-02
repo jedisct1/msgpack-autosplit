@@ -268,6 +268,7 @@ log_rotate(AppContext * const context)
         ->logfile_open(context, current_file_name) != 0) {
         err(1, _("Unable to create [%s]"), current_file_name);
     }
+    time(&context->logfile_last_rotation);
     assert(context->logfile_enabled == 1);
 
     return 0;
